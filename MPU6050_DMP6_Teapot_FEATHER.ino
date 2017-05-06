@@ -51,19 +51,19 @@ THE SOFTWARE.
 // Arduino Wire library is required if I2Cdev I2CDEV_ARDUINO_WIRE implementation
 // is used in I2Cdev.h
 #if I2CDEV_IMPLEMENTATION == I2CDEV_ARDUINO_WIRE
-    #include "Wire.h"
-        extern "C" { 
-    #include "utility/twi.h"  // from Wire library, so we can do bus scanning
-    }
-    #define TCAADDR 0x70
+#include "Wire.h"
+extern "C" {
+#include "utility/twi.h"  // from Wire library, so we can do bus scanning
+}
+#define TCAADDR 0x70
 #endif
 
     void tcaselect(uint8_t i) {
       if (i > 7) return;
-     
+
       Wire.beginTransmission(TCAADDR);
       Wire.write(1 << i);
-      Wire.endTransmission();  
+      Wire.endTransmission();
     }
 
 // class default I2C address is 0x68
@@ -237,11 +237,11 @@ void setup() {
         mpu.setDMPEnabled(true);
 
         // enable Arduino interrupt detection
-        
+
         Serial.println(F("Enabling interrupt detection (Arduino external interrupt 0)..."));
         //attachInterrupt(digitalPinToInterrupt(INTERRUPT_PIN), dmpDataReady, RISING);
         mpuIntStatus = mpu.getIntStatus();
-        
+
         // set our DMP Ready flag so the main loop() function knows it's okay to use it
         Serial.println(F("DMP ready! Waiting for first interrupt..."));
         dmpReady = true;
@@ -299,7 +299,7 @@ void loop() {
 
         // read a packet from FIFO
         mpu.getFIFOBytes(fifoBuffer, packetSize);
-        
+
         // track FIFO count here in case there is > 1 packet available
         // (this lets us immediately read more without waiting for an interrupt)
         fifoCount -= packetSize;
@@ -371,7 +371,7 @@ void loop() {
             Serial.print("\t");
             Serial.println(aaWorld.z);
         #endif
-    
+
         #ifdef OUTPUT_TEAPOT
             // display quaternion values in InvenSense Teapot demo format:
             teapotPacket[2] = fifoBuffer[0];
@@ -390,5 +390,5 @@ void loop() {
         blinkState = !blinkState;
         digitalWrite(LED_PIN, blinkState);
     }
-   
+
 }
